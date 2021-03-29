@@ -4,7 +4,7 @@ import requests
 
 
 # Dataset
-df = pd.read_csv("bike-sharing.csv")
+df = pd.read_csv("https://pycourse.s3.amazonaws.com/bike-sharing.csv")
 
 # Qual o tamanho desse dataset?
 print("O tamanho do dataset é {}".format(df.shape))
@@ -34,24 +34,17 @@ print("Foram realizados {} aluguéis.".format(df_2011["total_count"].sum()))
 print("Foram realizados {} aluguéis.".format(df_2012["total_count"].sum()))
 
 # Qual estação do ano contém a maior média de locações de bicicletas?
-dict = {"Inverno": [],"Primavera": [], "Verão": [], "Outono": []}
-df_inverno = df[df["season"] == 1]
-print("Quando é inverno, em média, se alugam {} bicicletas.".format(df_inverno["total_count"].mean()))
-dict["Inverno"].append(df_inverno["total_count"].mean())
-df_primavera = df[df["season"] == 2]
-print("Quando é primavera, em média, se alugam {} bicicletas.".format(df_primavera["total_count"].mean()))
-dict["Primavera"].append(df_primavera["total_count"].mean())
-df_verao = df[df["season"] == 3]
-print("Quando é verão, em média, se alugam {} bicicletas.".format(df_verao["total_count"].mean()))
-dict["Verão"].append(df_verao["total_count"].mean())
-df_outono = df[df["season"] == 4]
-print("Quando é outono, em média, se alugam {} bicicletas.".format(df_outono["total_count"].mean()))
-dict["Outono"].append(df_outono["total_count"].mean())
-df_season = pd.DataFrame(list(dict.items()),columns = ['Season','Média'])
-print("\n", df_season)
+# season: estação do ano (1: inverno, 2: primavera, 3: verão, 4: outono). Relativo ao hemisfério norte;
+season_dict = {}
+for x in range (1, 5):
+    df_season = df[df["season"] == x]
+    season_dict[x] = df_season["total_count"].mean()
+df_season = pd.DataFrame(list(season_dict.items()),columns = ['Estação','Média'])
+print(df_season)
 print("\nA maior média é de {} aluguéis de bicicleta.".format(max(df_season["Média"])))
 
 # Qual estação do ano contém a menor média de locações de bicicletas?
+# season: estação do ano (1: inverno, 2: primavera, 3: verão, 4: outono). Relativo ao hemisfério norte;
 print("A menor média é de {} aluguéis de bicicleta.".format(min(df_season["Média"])))
 
 #  Qual horário do dia contém a maior média de locações de bicicletas?
@@ -67,6 +60,7 @@ print("\nA maior média é de {} aluguéis de bicicleta.".format(max(df_hour["M�
 print("A menor média é de {} aluguéis de bicicleta.".format(min(df_hour["Média"])))
 
 #  Que dia da semana contém a maior média de locações de bicicletas?
+# weekday: dia da semana (0: domingo, 1: segunda-feira, …, 6: sábado);
 week_dict = {}
 for x in range (7):
     df_week = df[df["weekday"] == x]
@@ -76,6 +70,7 @@ print(df_week)
 print("\nA maior média é de {} aluguéis de bicicleta.".format(max(df_week["Média"])))
 
 #  Que dia da semana contém a menor média de locações de bicicletas?
+# weekday: dia da semana (0: domingo, 1: segunda-feira, …, 6: sábado);
 print("A menor média é de {} aluguéis de bicicleta.".format(min(df_week["Média"])))
 
 #  Às quartas-feiras (weekday = 3), qual o horário do dia contém a maior média de locações de bicicletas?
